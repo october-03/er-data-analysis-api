@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from 'typeorm.config';
 import { BullModule } from '@nestjs/bull';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { BullModule } from '@nestjs/bull';
     BullModule.registerQueue({
       name: 'erApiQueue',
     }),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
