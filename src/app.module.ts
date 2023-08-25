@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from 'typeorm.config';
 import { BullModule } from '@nestjs/bull';
 import { UserModule } from './user/user.module';
+import { TestModule } from './test/test.module';
+import { ErApiModule } from './er-api/er-api.module';
 
 @Module({
   imports: [
@@ -12,10 +14,9 @@ import { UserModule } from './user/user.module';
     BullModule.forRoot({
       redis: { host: 'redis', port: Number(process.env.REDIS_PORT) },
     }),
-    BullModule.registerQueue({
-      name: 'erApiQueue',
-    }),
     UserModule,
+    TestModule,
+    ErApiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

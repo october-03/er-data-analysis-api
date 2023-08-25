@@ -1,16 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TestService } from './test.service';
 import { TestController } from './test.controller';
-import { BullModule } from '@nestjs/bull';
-import { AppConsumer } from 'src/app.consumer';
+import { ErApiModule } from 'src/er-api/er-api.module';
 
 @Module({
-  imports: [
-    BullModule.registerQueue({
-      name: 'erApiQueue',
-    }),
-  ],
+  imports: [ErApiModule],
   providers: [TestService],
-  controllers: [TestController, AppConsumer],
+  controllers: [TestController],
 })
 export class TestModule {}
