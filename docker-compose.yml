@@ -38,8 +38,8 @@ services:
     image: redis:alpine3.18
     networks:
       - webnet
-    expose:
-      - ${REDIS_PORT}
+    ports:
+      - ${REDIS_HOSTPORT}:${REDIS_PORT}
 networks:
   webnet:
 volumes:
