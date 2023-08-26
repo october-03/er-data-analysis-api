@@ -19,6 +19,8 @@ services:
     depends_on:
       - postgres
       - redis
+    environment:
+      - TZ=${TZ}
   postgres:
     container_name: postgres
     image: postgres:15.4-alpine3.18
@@ -30,7 +32,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      # PG_DATA: /var/lib/postgresql/data/
+      TZ: ${TZ}
     volumes:
       - pgdata:/var/lib/postgresql/data/
   redis:
@@ -40,6 +42,8 @@ services:
       - webnet
     ports:
       - ${REDIS_HOSTPORT}:${REDIS_PORT}
+    environment:
+      - TZ=${TZ}
 networks:
   webnet:
 volumes:
