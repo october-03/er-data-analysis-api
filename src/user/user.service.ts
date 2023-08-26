@@ -10,4 +10,10 @@ export class UserService {
 
     return job;
   }
+
+  async getInfo(nickname: string) {
+    const job = await this.erApiService.getInfo(nickname);
+
+    return job;
+  }
 }
