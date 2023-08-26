@@ -15,7 +15,7 @@ export class User {
   @Column({ unique: true })
   nickname: string;
 
-  @CreateDateColumn({ type: 'timestamp with time zone' })
+  @CreateDateColumn()
   createdAt: Timestamp;
 
   @UpdateDateColumn()
