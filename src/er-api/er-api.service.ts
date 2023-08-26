@@ -19,4 +19,15 @@ export class ErApiService {
     const jobResult = await job.finished();
     return jobResult;
   }
+
+  async getInfo(nickname: string) {
+    const job = await this.erApiQueue.add(
+      'getInfo',
+      { nickname },
+      { removeOnComplete: true, removeOnFail: true },
+    );
+
+    const jobResult = await job.finished();
+    return jobResult;
+  }
 }
