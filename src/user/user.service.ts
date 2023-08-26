@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { ErApiService } from 'src/er-api/er-api.service';
+import { ErApiQueueService } from 'src/er-api/er-api-queue.service';
 
 @Injectable()
 export class UserService {
-  constructor(private erApiService: ErApiService) {}
+  constructor(private erApiQueueService: ErApiQueueService) {}
 
   async queueTest() {
-    const job = await this.erApiService.queueTest('user');
+    const job = await this.erApiQueueService.queueTest('user');
 
     return job;
   }
 
   async getInfo(nickname: string) {
-    const job = await this.erApiService.getInfo(nickname);
+    const job = await this.erApiQueueService.getInfo(nickname);
 
     return job;
   }
