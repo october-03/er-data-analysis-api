@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as dayjs from 'dayjs';
 import { Game } from 'src/entities/Game.entity';
 import { GameUser } from 'src/entities/GameUser.entity';
 import { User } from 'src/entities/User.entity';
@@ -10,6 +11,7 @@ import {
 } from 'src/types/erApiResponse';
 import erApiService from 'src/utils/erApiService';
 import { Repository } from 'typeorm';
+dayjs().format();
 
 @Injectable()
 export class ErApiService {
@@ -30,6 +32,7 @@ export class ErApiService {
 
   async getUserInfo(nickname: string): Promise<User> {
     const user = await this.registerUser(nickname);
+    const now = dayjs();
 
     await this.delay(1000);
 
@@ -40,15 +43,31 @@ export class ErApiService {
       relations: ['gameUsers', 'gameUsers.game'],
     });
 
+    let requestType: 'full' | 'fast' = 'full';
+
+    if (now.diff(user.lastUpdate, 'day') < 7) {
+      requestType = 'fast';
+    }
+
     const alreadyGameList = userData.gameUsers.map((gameUser) => {
       return gameUser.game.id;
     });
-    let gameList = await this.registerGame(user, alreadyGameList, next);
+    let gameList = await this.registerGame(
+      user,
+      alreadyGameList,
+      requestType,
+      next,
+    );
 
     while (gameList) {
       next = gameList;
       await this.delay(1500);
-      gameList = await this.registerGame(user, alreadyGameList, next);
+      gameList = await this.registerGame(
+        user,
+        alreadyGameList,
+        requestType,
+        next,
+      );
     }
 
     await this.delay(1000);
@@ -96,6 +115,7 @@ export class ErApiService {
   async registerGame(
     user: User,
     alreadyGames: number[],
+    type: 'fast' | 'full',
     next?: string,
   ): Promise<string> {
     const gameData = await erApiService.get<ErGameList>(
@@ -144,6 +164,10 @@ export class ErApiService {
       const newGameUser = this.gameUserRepository.create(insertGameUserData);
 
       await this.gameUserRepository.insert(newGameUser);
+    }
+
+    if (type === 'fast' && gameList.length < 10) {
+      return undefined;
     }
 
     return gameData.data.next;
