@@ -17,6 +17,7 @@ export interface ErDetailGame extends DefaultErApiResponse {
 
 export interface ErGameList extends DefaultErApiResponse {
   userGames: BattleUserResult[];
+  next: string;
 }
 
 interface BattleUserResult {
@@ -150,9 +151,9 @@ interface BattleUserResult {
   traitFirstCore: number;
   traitFirstSub: number[];
   traitSecondSub: number[];
-  TotalTurbineTakeover?: number;
-  StartingItems?: number[];
-  UsedNormalHealPack?: number;
+  totalTurbineTakeover?: number;
+  startingItems?: number[];
+  usedNormalHealPack?: number;
   UsedReinforcedHealPack?: number;
   UsedNormalShiedPack?: number;
   UsedReinforcedShieldPack?: number;
@@ -164,7 +165,7 @@ interface BattleUserResult {
   ItemTransferredDrone?: number[];
   FinalInfusion?: number[];
   CraftMythic?: number;
-  PlayerDeaths: number;
+  playerDeaths: number;
   KillGamma: boolean;
   ScoredPoint?: number[];
   KillDetails: { [key: string]: number };

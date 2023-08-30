@@ -4,23 +4,27 @@ import {
   Entity,
   OneToMany,
   PrimaryColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { GameUser } from './GameUser.entity';
 
-@Entity('user')
-export class User {
+@Entity('game')
+export class Game {
   @PrimaryColumn()
   id: number;
 
-  @Column({ unique: true })
-  nickname: string;
-
-  @OneToMany(() => GameUser, (gameUser) => gameUser.user)
+  @OneToMany(() => GameUser, (gameUser) => gameUser.game, { nullable: true })
   gameUsers: GameUser[];
 
   @Column()
-  lastUpdate: Date;
+  startDtm: Date;
+
+  @Column()
+  playTime: number;
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

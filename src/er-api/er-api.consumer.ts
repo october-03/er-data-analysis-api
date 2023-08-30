@@ -15,7 +15,7 @@ export class ErApiConsumer {
 
   @Process('getInfo')
   async getInfo(job: Job<getInfoParams>, done) {
-    const result = await this.erService.getInfo(job.data.nickname);
+    const result = await this.erService.getUserInfo(job.data.nickname);
 
     done(null, result);
   }

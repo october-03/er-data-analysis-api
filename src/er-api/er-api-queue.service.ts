@@ -1,6 +1,7 @@
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
+import { User } from 'src/entities/User.entity';
 
 @Injectable()
 export class ErApiQueueService {
@@ -26,7 +27,8 @@ export class ErApiQueueService {
       { removeOnComplete: true, removeOnFail: true },
     );
 
-    const jobResult = await job.finished();
+    const jobResult: User = await job.finished();
+
     return jobResult;
   }
 }
