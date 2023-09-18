@@ -3,12 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
 import { Game } from 'src/entities/Game.entity';
 import { GameUser } from 'src/entities/GameUser.entity';
+import { SeasonUser } from 'src/entities/SeasonUser.entity';
 import { User } from 'src/entities/User.entity';
 import {
   BattleUserResult,
   ErGameList,
+  ErSeasonUser,
   ErUserInfo,
 } from 'src/types/erApiResponse';
+import { MatchingTeamMode } from 'src/types/matchingTeamMode';
 import erApiService from 'src/utils/erApiService';
 import { Repository } from 'typeorm';
 dayjs().format();
@@ -22,6 +25,8 @@ export class ErApiService {
     private readonly gameRepository: Repository<Game>,
     @InjectRepository(GameUser)
     private readonly gameUserRepository: Repository<GameUser>,
+    @InjectRepository(SeasonUser)
+    private readonly seasonUserRepository: Repository<SeasonUser>,
   ) {}
 
   delay(ms: number): Promise<void> {
@@ -30,7 +35,7 @@ export class ErApiService {
     });
   }
 
-  async getUserInfo(nickname: string): Promise<User> {
+  async getUserInfo(nickname: string, seasonId: number): Promise<User> {
     const user = await this.registerUser(nickname);
     const now = dayjs();
 
@@ -52,6 +57,7 @@ export class ErApiService {
     const alreadyGameList = userData.gameUsers.map((gameUser) => {
       return gameUser.game.id;
     });
+
     let gameList = await this.registerGame(
       user,
       alreadyGameList,
@@ -72,9 +78,16 @@ export class ErApiService {
 
     await this.delay(1000);
 
+    this.registerSeasonData(user, seasonId);
+
+    await this.delay(1000);
+
     await this.userRepository.update(user.id, { lastUpdate: new Date() });
 
-    return user;
+    return await this.userRepository.findOne({
+      where: { id: user.id },
+      relations: ['gameUsers', 'gameUsers.game'],
+    });
   }
 
   async registerUser(nickname: string, id?: number): Promise<User> {
@@ -171,5 +184,59 @@ export class ErApiService {
     }
 
     return gameData.data.next;
+  }
+
+  async registerSeasonData(user: User, seasonId: number) {
+    const res = await erApiService.get<ErSeasonUser>(
+      `/v1/user/stats/${user.id}/${seasonId}`,
+    );
+
+    const seasonData = res.data.userStats;
+
+    if (!seasonData) {
+      return;
+    }
+
+    for (const season of seasonData) {
+      const id = `${season.userNum}-${season.seasonId}-${
+        MatchingTeamMode[season.matchingTeamMode]
+      }`;
+
+      const seasonUser = {
+        id,
+        averageAssists: season.averageAssistants,
+        averageHunts: season.averageHunts,
+        averageKills: season.averageKills,
+        averageRank: season.averageRank,
+        matchingTeamMode: season.matchingTeamMode,
+        mmr: season.mmr,
+        rank: season.rank,
+        rankSize: season.rankSize,
+        seasonId: season.seasonId,
+        top2Rate: season.top2 * 100,
+        top3Rate: season.top3 * 100,
+        totalGames: season.totalGames,
+        totalWins: season.totalWins,
+        user: user,
+      } as SeasonUser;
+
+      if (seasonUser.totalGames === 0) {
+        seasonUser.winRate = 0;
+      } else {
+        const winRate = (seasonUser.totalWins / seasonUser.totalGames) * 100;
+        seasonUser.winRate = Number(winRate.toFixed(2));
+      }
+
+      const isSeasonUserExist = await this.seasonUserRepository.findOne({
+        where: { id },
+      });
+
+      if (!isSeasonUserExist) {
+        const newSeasonUser = this.seasonUserRepository.create(seasonUser);
+        await this.seasonUserRepository.insert(newSeasonUser);
+      } else {
+        await this.seasonUserRepository.update(id, seasonUser);
+      }
+    }
   }
 }

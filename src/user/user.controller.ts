@@ -12,9 +12,12 @@ export class UserController {
     return this.userService.queueTest();
   }
 
-  @Get('/:nickname')
-  getInfo(@Param('nickname') nickname: string) {
+  @Get('/:nickname/:seasonId')
+  getInfo(
+    @Param('nickname') nickname: string,
+    @Param('seasonId') seasonId: number,
+  ) {
     this.logger.log(`Request GetInfo ${nickname}`);
-    return this.userService.getInfo(nickname);
+    return this.userService.getInfo(nickname, seasonId);
   }
 }

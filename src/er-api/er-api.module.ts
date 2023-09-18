@@ -7,11 +7,12 @@ import { User } from 'src/entities/User.entity';
 import { ErApiQueueService } from './er-api-queue.service';
 import { Game } from 'src/entities/Game.entity';
 import { GameUser } from 'src/entities/GameUser.entity';
+import { SeasonUser } from 'src/entities/SeasonUser.entity';
 
 @Module({
   imports: [
     BullModule.registerQueue({ name: 'erApiQueue' }),
-    TypeOrmModule.forFeature([User, Game, GameUser]),
+    TypeOrmModule.forFeature([User, Game, GameUser, SeasonUser]),
   ],
   providers: [ErApiService, ErApiConsumer, ErApiQueueService],
   exports: [ErApiQueueService],

@@ -6,6 +6,7 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { GameUser } from './GameUser.entity';
+import { SeasonUser } from './SeasonUser.entity';
 
 @Entity('user')
 export class User {
@@ -15,8 +16,13 @@ export class User {
   @Column({ unique: true })
   nickname: string;
 
-  @OneToMany(() => GameUser, (gameUser) => gameUser.user)
+  @OneToMany(() => GameUser, (gameUser) => gameUser.user, { nullable: true })
   gameUsers: GameUser[];
+
+  @OneToMany(() => SeasonUser, (seasonUser) => seasonUser.user, {
+    nullable: true,
+  })
+  seasonData: SeasonUser[];
 
   @Column()
   lastUpdate: Date;

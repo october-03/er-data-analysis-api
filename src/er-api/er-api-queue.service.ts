@@ -20,10 +20,10 @@ export class ErApiQueueService {
     return jobResult;
   }
 
-  async getInfo(nickname: string) {
+  async getInfo(nickname: string, seasonId: number) {
     const job = await this.erApiQueue.add(
       'getInfo',
-      { nickname },
+      { nickname, seasonId },
       { removeOnComplete: true, removeOnFail: true },
     );
 

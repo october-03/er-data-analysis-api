@@ -11,8 +11,8 @@ export class UserService {
     return job;
   }
 
-  async getInfo(nickname: string) {
-    const job = await this.erApiQueueService.getInfo(nickname);
+  async getInfo(nickname: string, seasonId: number) {
+    const job = await this.erApiQueueService.getInfo(nickname, seasonId);
 
     return job;
   }

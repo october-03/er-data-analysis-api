@@ -15,7 +15,10 @@ export class ErApiConsumer {
 
   @Process('getInfo')
   async getInfo(job: Job<getInfoParams>, done) {
-    const result = await this.erService.getUserInfo(job.data.nickname);
+    const result = await this.erService.getUserInfo(
+      job.data.nickname,
+      job.data.seasonId,
+    );
 
     done(null, result);
   }
@@ -23,4 +26,5 @@ export class ErApiConsumer {
 
 type getInfoParams = {
   nickname: string;
+  seasonId: number;
 };
