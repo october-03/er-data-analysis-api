@@ -1,6 +1,7 @@
 import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
 import { ErApiService } from './er-api.service';
+import UpdateUserDto from 'src/dto/UpdateUser.dto';
 
 @Processor('erApiQueue')
 export class ErApiConsumer {
@@ -13,18 +14,10 @@ export class ErApiConsumer {
     }, 1000 * 30);
   }
 
-  @Process('getInfo')
-  async getInfo(job: Job<getInfoParams>, done) {
-    const result = await this.erService.getUserInfo(
-      job.data.nickname,
-      job.data.seasonId,
-    );
+  @Process('updateUser')
+  async getInfo(job: Job<UpdateUserDto>, done) {
+    const result = await this.erService.updateUser(job.data);
 
     done(null, result);
   }
 }
-
-type getInfoParams = {
-  nickname: string;
-  seasonId: number;
-};

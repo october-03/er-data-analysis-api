@@ -1,5 +1,13 @@
-import { Controller, Get, Logger, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  Logger,
+  Patch,
+} from '@nestjs/common';
 import { UserService } from './user.service';
+import UpdateUserDto from 'src/dto/UpdateUser.dto';
 
 @Controller('user')
 export class UserController {
@@ -12,12 +20,14 @@ export class UserController {
     return this.userService.queueTest();
   }
 
-  @Get('/:nickname/:seasonId')
-  getInfo(
-    @Param('nickname') nickname: string,
-    @Param('seasonId') seasonId: number,
-  ) {
-    this.logger.log(`Request GetInfo ${nickname}`);
-    return this.userService.getInfo(nickname, seasonId);
+  @Patch('/update')
+  updateUser(@Body() req: UpdateUserDto) {
+    const { nickname, seasonId } = req;
+    if (!nickname || !seasonId) {
+      this.logger.error(`Request updateUser ${nickname} ${seasonId}`);
+      throw new HttpException('요청값이 잘못되었습니다.', 400);
+    }
+    this.logger.log(`Request updateUser ${nickname}`);
+    return this.userService.updateUser(req);
   }
 }

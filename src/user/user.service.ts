@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import UpdateUserDto from 'src/dto/UpdateUser.dto';
 import { ErApiQueueService } from 'src/er-api/er-api-queue.service';
 
 @Injectable()
@@ -11,8 +12,8 @@ export class UserService {
     return job;
   }
 
-  async getInfo(nickname: string, seasonId: number) {
-    const job = await this.erApiQueueService.getInfo(nickname, seasonId);
+  async updateUser(updateUserDto: UpdateUserDto) {
+    const job = await this.erApiQueueService.updateUser(updateUserDto);
 
     return job;
   }
