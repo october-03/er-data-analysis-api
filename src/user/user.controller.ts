@@ -30,7 +30,8 @@ export class UserController {
       throw new HttpException('요청값이 잘못되었습니다.', 400);
     }
     this.logger.log(`Request updateUser ${nickname}`);
-    return this.userService.updateUser(req);
+    await this.userService.updateUser(req);
+    return this.getUserInfo({ nickname, seasonId, page: 1 });
   }
 
   @Get('/')
