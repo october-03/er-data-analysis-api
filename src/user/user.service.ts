@@ -4,8 +4,9 @@ import GetUserInfoDto from 'src/dto/GetUserInfo.dto';
 import UpdateUserDto from 'src/dto/UpdateUser.dto';
 import { User } from 'src/entities/User.entity';
 import { ErApiQueueService } from 'src/er-api/er-api-queue.service';
-import { Repository } from 'typeorm';
+import { Equal, Repository } from 'typeorm';
 import { UserPaginationService } from './user-pagination.service';
+import { SeasonUser } from 'src/entities/SeasonUser.entity';
 
 @Injectable()
 export class UserService {
@@ -15,6 +16,8 @@ export class UserService {
 
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(SeasonUser)
+    private readonly seasonUserRepository: Repository<SeasonUser>,
   ) {}
 
   async queueTest() {
@@ -55,5 +58,15 @@ export class UserService {
     const gameData = await this.userPaginationService.getGameUserList(
       pageNationDto,
     );
+
+    const stats = await this.seasonUserRepository.find({
+      where: { user: Equal(id), seasonId },
+    });
+
+    return {
+      user,
+      gameData,
+      stats,
+    };
   }
 }

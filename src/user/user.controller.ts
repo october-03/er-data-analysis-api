@@ -39,6 +39,6 @@ export class UserController {
     req.seasonId = Number(seasonId);
     req.page = Number(page);
 
-    await this.userService.getUserInfo(req);
+    return this.userService.getUserInfo(req);
   }
 }
