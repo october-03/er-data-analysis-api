@@ -54,8 +54,6 @@ export class ErApiUserService {
       relations: ['gameUsers', 'gameUsers.game'],
     });
 
-    console.log(userData);
-
     return userData;
   }
 

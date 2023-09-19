@@ -5,9 +5,11 @@ import {
   HttpException,
   Logger,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import UpdateUserDto from 'src/dto/UpdateUser.dto';
+import GetUserInfoDto from 'src/dto/GetUserInfo.dto';
 
 @Controller('user')
 export class UserController {
@@ -21,7 +23,7 @@ export class UserController {
   }
 
   @Patch('/update')
-  updateUser(@Body() req: UpdateUserDto) {
+  async updateUser(@Body() req: UpdateUserDto) {
     const { nickname, seasonId } = req;
     if (!nickname || !seasonId) {
       this.logger.error(`Request updateUser ${nickname} ${seasonId}`);
@@ -29,5 +31,14 @@ export class UserController {
     }
     this.logger.log(`Request updateUser ${nickname}`);
     return this.userService.updateUser(req);
+  }
+
+  @Get('/')
+  async getUserInfo(@Query() req: GetUserInfoDto) {
+    const { seasonId, page } = req;
+    req.seasonId = Number(seasonId);
+    req.page = Number(page);
+
+    await this.userService.getUserInfo(req);
   }
 }
