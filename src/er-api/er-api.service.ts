@@ -172,6 +172,8 @@ export class ErApiService {
         TeamKillCount: game.teamKill,
         user: user,
         game: existingGame,
+        seasonId: game.seasonId,
+        id: `${game.userNum}-${game.gameId}-${game.seasonId}`,
       };
 
       const newGameUser = this.gameUserRepository.create(insertGameUserData);

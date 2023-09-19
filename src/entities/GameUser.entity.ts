@@ -5,15 +5,15 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   JoinColumn,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from 'typeorm';
 import { User } from './User.entity';
 import { Game } from './Game.entity';
 
 @Entity('game_user')
 export class GameUser {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn()
+  id: string;
 
   @ManyToOne(() => Game, (game) => game.gameUsers)
   @JoinColumn({ name: 'game_id' })
@@ -40,6 +40,9 @@ export class GameUser {
 
   @Column()
   AnimalKillCount: number;
+
+  @Column()
+  seasonId: number;
 
   @CreateDateColumn()
   createdAt: Date;
