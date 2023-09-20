@@ -25,7 +25,7 @@ export class UserController {
   @Patch('/update')
   async updateUser(@Body() req: UpdateUserDto) {
     const { nickname, seasonId } = req;
-    if (!nickname || !seasonId) {
+    if (!nickname || seasonId < 0) {
       this.logger.error(`Request updateUser ${nickname} ${seasonId}`);
       throw new HttpException('요청값이 잘못되었습니다.', 400);
     }

@@ -33,7 +33,8 @@ export class UserService {
   }
 
   async getUserInfo(getUserInfoDto: GetUserInfoDto) {
-    const { nickname, page, seasonId } = getUserInfoDto;
+    const { nickname, seasonId } = getUserInfoDto;
+    let { page } = getUserInfoDto;
 
     const user = await this.userRepository.findOne({
       where: { nickname },
@@ -45,8 +46,9 @@ export class UserService {
       id,
       seasonId,
     );
+
     if (page > maxPage) {
-      getUserInfoDto.page = maxPage;
+      page = maxPage;
     }
 
     const pageNationDto = {
