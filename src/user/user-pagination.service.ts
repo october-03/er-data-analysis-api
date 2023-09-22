@@ -32,6 +32,7 @@ export class UserPaginationService {
       where: { user: Equal(user.id), seasonId },
       take: this.pageSize,
       skip: (page - 1) * this.pageSize,
+      relations: ['game'],
     });
 
     return data;
