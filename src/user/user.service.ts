@@ -47,7 +47,9 @@ export class UserService {
       seasonId,
     );
 
-    if (page > maxPage) {
+    if (page < 1) {
+      page = 1;
+    } else if (page > maxPage) {
       page = maxPage;
     }
 
