@@ -55,12 +55,12 @@ export class ErApiGameService {
       });
 
       const insertGameUserData = {
-        KillCount: game.playerKill,
-        AnimalKillCount: game.monsterKill,
-        AssistCount: game.playerAssistant,
+        killCount: game.playerKill,
+        animalKillCount: game.monsterKill,
+        assistCount: game.playerAssistant,
         characterNum: game.characterNum,
-        DeathCount: game.playerDeaths,
-        TeamKillCount: game.teamKill,
+        deathCount: game.playerDeaths,
+        teamKillCount: game.teamKill,
         user: user,
         game: existingGame,
         seasonId: game.seasonId,
