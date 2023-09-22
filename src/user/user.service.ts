@@ -36,9 +36,16 @@ export class UserService {
     const { nickname, seasonId } = getUserInfoDto;
     let { page } = getUserInfoDto;
 
-    const user = await this.userRepository.findOne({
+    let user = await this.userRepository.findOne({
       where: { nickname },
     });
+
+    if (!user) {
+      await this.updateUser({ nickname, seasonId });
+      user = await this.userRepository.findOne({
+        where: { nickname },
+      });
+    }
 
     const id = user.id;
 
