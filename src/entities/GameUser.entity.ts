@@ -27,19 +27,19 @@ export class GameUser {
   characterNum: number;
 
   @Column()
-  KillCount: number;
+  killCount: number;
 
   @Column()
-  DeathCount: number;
+  deathCount: number;
 
   @Column()
-  AssistCount: number;
+  assistCount: number;
 
   @Column()
-  TeamKillCount: number;
+  teamKillCount: number;
 
   @Column()
-  AnimalKillCount: number;
+  animalKillCount: number;
 
   @Column()
   seasonId: number;
